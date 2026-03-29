@@ -1,0 +1,995 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Volleyball Sai Vista 🏐 — Expense Report</title>
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700;800;900&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet" />
+<style>
+  :root {
+    --bg: #0b0f1a;
+    --surface: #131826;
+    --surface2: #1a2035;
+    --border: #252f47;
+    --accent: #f5a623;
+    --green: #27c98a;
+    --red: #e84b4b;
+    --blue: #4a90e2;
+    --purple: #9b6dff;
+    --orange: #e8673a;
+    --text: #eef0f6;
+    --text2: #8a92aa;
+    --text3: #4a5470;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { background: var(--bg); color: var(--text); font-family: 'DM Sans', sans-serif; font-size: 14px; line-height: 1.6; }
+  .page { max-width: 1200px; margin: 0 auto; padding: 32px 20px; }
+
+  /* Header */
+  .report-header { text-align: center; margin-bottom: 40px; padding: 32px; background: var(--surface); border-radius: 16px; border: 1px solid var(--border); position: relative; overflow: hidden; }
+  .report-header::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 4px; background: linear-gradient(90deg, var(--accent), var(--orange), var(--green)); }
+  .report-title { font-family: 'Barlow Condensed', sans-serif; font-size: 42px; font-weight: 900; letter-spacing: 1px; color: var(--accent); }
+  .report-sub { font-size: 15px; color: var(--text2); margin-top: 6px; }
+  .report-date { font-size: 12px; color: var(--text3); margin-top: 4px; }
+
+  /* Section */
+  .section { margin-bottom: 36px; }
+  .section-title { font-family: 'Barlow Condensed', sans-serif; font-size: 22px; font-weight: 800; letter-spacing: 0.5px; margin-bottom: 14px; display: flex; align-items: center; gap: 10px; }
+  .section-title::after { content: ''; flex: 1; height: 1px; background: var(--border); }
+
+  /* Stat grid */
+  .stat-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 14px; margin-bottom: 28px; }
+  .stat-card { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 18px; position: relative; overflow: hidden; }
+  .stat-card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px; }
+  .stat-card.green::before { background: var(--green); }
+  .stat-card.amber::before { background: var(--accent); }
+  .stat-card.red::before { background: var(--red); }
+  .stat-card.blue::before { background: var(--blue); }
+  .stat-card.purple::before { background: var(--purple); }
+  .stat-label { font-size: 10px; font-weight: 600; color: var(--text3); text-transform: uppercase; letter-spacing: 1.2px; margin-bottom: 8px; }
+  .stat-value { font-family: 'Barlow Condensed', sans-serif; font-size: 30px; font-weight: 800; line-height: 1; }
+  .stat-card.green .stat-value { color: var(--green); }
+  .stat-card.amber .stat-value { color: var(--accent); }
+  .stat-card.red .stat-value { color: var(--red); }
+  .stat-card.blue .stat-value { color: var(--blue); }
+  .stat-card.purple .stat-value { color: var(--purple); }
+  .stat-sub { font-size: 11px; color: var(--text3); margin-top: 5px; }
+
+  /* Table */
+  .table-wrap { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; overflow: hidden; margin-bottom: 24px; }
+  table { width: 100%; border-collapse: collapse; }
+  thead th { background: var(--surface2); padding: 10px 16px; text-align: left; font-size: 10px; font-weight: 700; color: var(--text3); text-transform: uppercase; letter-spacing: 1.2px; border-bottom: 1px solid var(--border); white-space: nowrap; }
+  tbody tr { border-bottom: 1px solid var(--border); }
+  tbody tr:last-child { border-bottom: none; }
+  tbody tr:nth-child(even) { background: rgba(255,255,255,0.015); }
+  td { padding: 11px 16px; font-size: 13px; vertical-align: middle; }
+
+  /* Badge */
+  .badge { display: inline-flex; align-items: center; padding: 3px 9px; border-radius: 20px; font-size: 11px; font-weight: 600; white-space: nowrap; }
+  .badge-green { background: rgba(39,201,138,0.15); color: var(--green); }
+  .badge-red { background: rgba(232,75,75,0.15); color: var(--red); }
+  .badge-amber { background: rgba(245,166,35,0.15); color: var(--accent); }
+  .badge-blue { background: rgba(74,144,226,0.15); color: var(--blue); }
+  .badge-purple { background: rgba(155,109,255,0.15); color: var(--purple); }
+  .badge-gray { background: var(--surface2); color: var(--text2); }
+
+  /* Rupee */
+  .amt { font-family: 'Barlow Condensed', sans-serif; font-size: 16px; font-weight: 800; }
+  .amt-red { color: var(--red); }
+  .amt-green { color: var(--green); }
+  .amt-amber { color: var(--accent); }
+  .amt-blue { color: var(--blue); }
+
+  /* Fund raise cards */
+  .fund-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 14px; margin-bottom: 28px; }
+  .fund-card { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 18px; border-left: 4px solid var(--accent); }
+  .fund-card-title { font-family: 'Barlow Condensed', sans-serif; font-size: 17px; font-weight: 800; color: var(--accent); margin-bottom: 10px; }
+  .fund-row { display: flex; justify-content: space-between; font-size: 12px; margin-bottom: 5px; color: var(--text2); }
+  .fund-row span:last-child { font-weight: 600; color: var(--text); }
+
+  /* Progress bar */
+  .pbar { height: 5px; background: var(--border); border-radius: 3px; overflow: hidden; margin-top: 10px; }
+  .pbar-fill { height: 100%; border-radius: 3px; }
+
+  /* Note */
+  .note { background: rgba(245,166,35,0.08); border: 1px solid rgba(245,166,35,0.2); border-radius: 8px; padding: 12px 16px; font-size: 13px; color: var(--text2); margin-bottom: 20px; }
+  .note strong { color: var(--accent); }
+
+  /* Footer */
+  .footer { text-align: center; margin-top: 40px; padding: 20px; color: var(--text3); font-size: 12px; border-top: 1px solid var(--border); }
+
+  /* Avatar circle */
+  .avatar { width: 28px; height: 28px; border-radius: 50%; display: inline-flex; align-items: center; justify-content: center; font-family: 'Barlow Condensed', sans-serif; font-size: 13px; font-weight: 800; color: #fff; flex-shrink: 0; vertical-align: middle; margin-right: 8px; }
+
+  .divider { height: 1px; background: var(--border); margin: 28px 0; }
+
+  @media(max-width: 600px) { .stat-grid { grid-template-columns: 1fr 1fr; } td,th { padding: 8px 10px; } }
+</style>
+</head>
+<body>
+<div class="page">
+
+  <!-- HEADER -->
+  <div class="report-header">
+    <div class="report-title">🏐 Volleyball Sai Vista</div>
+    <div class="report-sub">Complete Fund & Expense Report — Group Chat Analysis</div>
+    <div class="report-date">Period: 27 Apr 2025 – 29 Mar 2026 &nbsp;|&nbsp; Generated: 29 Mar 2026</div>
+  </div>
+
+  <!-- OVERALL SUMMARY -->
+  <div class="section">
+    <div class="section-title">📊 Overall Financial Summary</div>
+    <div class="stat-grid">
+      <div class="stat-card amber">
+        <div class="stat-label">Total Funds Raised</div>
+        <div class="stat-value">₹16,280+</div>
+        <div class="stat-sub">Across 4 fund rounds + adhoc</div>
+      </div>
+      <div class="stat-card red">
+        <div class="stat-label">Total Expenses</div>
+        <div class="stat-value">₹10,697</div>
+        <div class="stat-sub">8 confirmed expense items</div>
+      </div>
+      <div class="stat-card green">
+        <div class="stat-label">Remaining Balance</div>
+        <div class="stat-value">₹2,680+</div>
+        <div class="stat-sub">As of 21 Mar 2026 (Abhilash)</div>
+      </div>
+      <div class="stat-card blue">
+        <div class="stat-label">Fund Rounds</div>
+        <div class="stat-value">4</div>
+        <div class="stat-sub">Round 1–3 completed, Round 4 ongoing</div>
+      </div>
+      <div class="stat-card purple">
+        <div class="stat-label">Total Members Contributed</div>
+        <div class="stat-value">60+</div>
+        <div class="stat-sub">Across all rounds</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- EXPENSES TABLE -->
+  <div class="section">
+    <div class="section-title">💸 Expense Details</div>
+    <div class="note"><strong>Source:</strong> Expense summaries posted by Saptrishi F501 and Abhilash at multiple dates. All amounts are as reported in chat.</div>
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>Item / Description</th>
+            <th>Category</th>
+            <th>Amount (₹)</th>
+            <th>Status</th>
+            <th>Notes</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>1</td>
+            <td><strong>Cosco Aspire Volleyball</strong></td>
+            <td><span class="badge badge-blue">Ball</span></td>
+            <td><span class="amt amt-red">₹800</span></td>
+            <td><span class="badge badge-red">❌ Lost</span></td>
+            <td style="color:var(--text2)">1st ball purchased — lost during play</td>
+          </tr>
+          <tr>
+            <td>2</td>
+            <td><strong>Cosco Super Volley (Size 4)</strong></td>
+            <td><span class="badge badge-blue">Ball</span></td>
+            <td><span class="amt amt-red">₹1,078</span></td>
+            <td><span class="badge badge-red">❌ Lost</span></td>
+            <td style="color:var(--text2)">2nd ball — bought via Pincode app; lost during play</td>
+          </tr>
+          <tr>
+            <td>3</td>
+            <td><strong>Pegion Volleyball Net (30M × 3M)</strong></td>
+            <td><span class="badge badge-green">Net</span></td>
+            <td><span class="amt amt-red">₹2,100</span></td>
+            <td><span class="badge badge-green">✅ Active</span></td>
+            <td style="color:var(--text2)">Main net for the court</td>
+          </tr>
+          <tr>
+            <td>4</td>
+            <td><strong>Zip Tie</strong></td>
+            <td><span class="badge badge-gray">Misc</span></td>
+            <td><span class="amt amt-red">₹100</span></td>
+            <td><span class="badge badge-green">✅ Done</span></td>
+            <td style="color:var(--text2)">Net installation accessory</td>
+          </tr>
+          <tr>
+            <td>5</td>
+            <td><strong>Cosco Super Volley (via Aditya)</strong></td>
+            <td><span class="badge badge-blue">Ball</span></td>
+            <td><span class="amt amt-red">₹1,000</span></td>
+            <td><span class="badge badge-green">✅ Paid</span></td>
+            <td style="color:var(--text2)">Ordered by Aditya Nagarnail on Amazon Prime; Jul 2025</td>
+          </tr>
+          <tr>
+            <td>6</td>
+            <td><strong>Nivia G2020 Ball (via Kumar)</strong></td>
+            <td><span class="badge badge-blue">Ball</span></td>
+            <td><span class="amt amt-red">₹890</span></td>
+            <td><span class="badge badge-amber">⚠️ Not in use</span></td>
+            <td style="color:var(--text2)">Bought from store by Kumar; Jul 2025; Nivia balls set aside</td>
+          </tr>
+          <tr>
+            <td>7</td>
+            <td><strong>Extra Net + Tar + Pulley</strong></td>
+            <td><span class="badge badge-green">Net / Setup</span></td>
+            <td><span class="amt amt-red">₹1,450</span></td>
+            <td><span class="badge badge-green">✅ Done</span></td>
+            <td style="color:var(--text2)">Additional net setup with pulley system; Jul 2025</td>
+          </tr>
+          <tr>
+            <td>8</td>
+            <td><strong>Pulley Fabrication Work</strong></td>
+            <td><span class="badge badge-gray">Setup / Labour</span></td>
+            <td><span class="amt amt-red">₹300</span></td>
+            <td><span class="badge badge-green">✅ Done</span></td>
+            <td style="color:var(--text2)">Fabrication for net pole pulley</td>
+          </tr>
+          <tr>
+            <td>9</td>
+            <td><strong>Wiper</strong></td>
+            <td><span class="badge badge-gray">Equipment</span></td>
+            <td><span class="amt amt-red">₹229</span></td>
+            <td><span class="badge badge-green">✅ Done</span></td>
+            <td style="color:var(--text2)">Ground maintenance; Jul 2025</td>
+          </tr>
+          <tr>
+            <td>10</td>
+            <td><strong>Ground Lights (Flood Lights)</strong></td>
+            <td><span class="badge badge-amber">Lighting</span></td>
+            <td><span class="amt amt-red">₹2,700</span></td>
+            <td><span class="badge badge-green">✅ Done</span></td>
+            <td style="color:var(--text2)">Permanent flood lights for court; Sep 2025</td>
+          </tr>
+          <tr style="background: rgba(245,166,35,0.06);">
+            <td colspan="3" style="text-align:right; font-weight:700; padding-right:16px; color:var(--text2);">TOTAL EXPENSES</td>
+            <td><span class="amt amt-red" style="font-size:20px;">₹10,647</span></td>
+            <td colspan="2"></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- FUND RAISE ROUNDS -->
+  <div class="section">
+    <div class="section-title">💰 Fund Raise Rounds</div>
+    <div class="fund-grid">
+
+      <div class="fund-card">
+        <div class="fund-card-title">🏦 Round 1 — 01 May 2025</div>
+        <div class="fund-row"><span>Amount per person</span><span>₹200</span></div>
+        <div class="fund-row"><span>No. of contributors</span><span>19 members</span></div>
+        <div class="fund-row"><span>Total raised (tracked)</span><span class="amt-green">₹3,800 → ₹5,200</span></div>
+        <div class="fund-row"><span>Balance after expenses</span><span class="amt-amber">₹1,122 (Jun 2025)</span></div>
+        <div class="fund-row"><span>Announced by</span><span>Abhilash & Saptrishi</span></div>
+        <div class="pbar"><div class="pbar-fill" style="width:100%;background:var(--green);"></div></div>
+        <div style="font-size:11px;color:var(--text3);margin-top:6px;">✅ Completed — spent on Ball 1, Ball 2, Net, Zip Tie</div>
+      </div>
+
+      <div class="fund-card" style="border-left-color: var(--blue);">
+        <div class="fund-card-title" style="color:var(--blue);">🏦 Round 2 — 13 Jul 2025</div>
+        <div class="fund-row"><span>Amount per person</span><span>₹200</span></div>
+        <div class="fund-row"><span>No. of contributors</span><span>28 members</span></div>
+        <div class="fund-row"><span>Total raised</span><span class="amt-green">₹5,000 → ₹5,800</span></div>
+        <div class="fund-row"><span>Previous balance brought forward</span><span class="amt-amber">₹632</span></div>
+        <div class="fund-row"><span>Balance after expenses</span><span class="amt-amber">₹1,355–₹4,055</span></div>
+        <div class="fund-row"><span>Announced by</span><span>Abhilash</span></div>
+        <div class="pbar"><div class="pbar-fill" style="width:100%;background:var(--blue);"></div></div>
+        <div style="font-size:11px;color:var(--text3);margin-top:6px;">✅ Completed — Ball 3 (Cosco/Aditya), Ball 4 (Nivia/Kumar), Net+Pulley, Wiper, Ground Lights</div>
+      </div>
+
+      <div class="fund-card" style="border-left-color:var(--purple);">
+        <div class="fund-card-title" style="color:var(--purple);">🏦 Round 3 — Sep 2025 (Adhoc)</div>
+        <div class="fund-row"><span>Amount</span><span>Various (400 per person noted)</span></div>
+        <div class="fund-row"><span>Notable payments</span><span>Prathamesh (₹400), Sachin (₹400)</span></div>
+        <div class="fund-row"><span>Balance update (15 Sep)</span><span class="amt-green">₹2,155</span></div>
+        <div class="fund-row"><span>New ball ordered</span><span>Cosco Super Volley</span></div>
+        <div class="fund-row"><span>Announced by</span><span>Abhilash</span></div>
+        <div class="pbar"><div class="pbar-fill" style="width:80%;background:var(--purple);"></div></div>
+        <div style="font-size:11px;color:var(--text3);margin-top:6px;">⚠️ Partial — adhoc collection; full list not published in chat</div>
+      </div>
+
+      <div class="fund-card" style="border-left-color:var(--orange);">
+        <div class="fund-card-title" style="color:var(--orange);">🏦 Round 4 — 28 Mar 2026</div>
+        <div class="fund-row"><span>Amount per person</span><span>₹200</span></div>
+        <div class="fund-row"><span>Opening balance</span><span class="amt-amber">₹2,680</span></div>
+        <div class="fund-row"><span>Contributors (confirmed "Done")</span><span>20+ members</span></div>
+        <div class="fund-row"><span>Announced by</span><span>Abhilash</span></div>
+        <div class="fund-row"><span>Purpose</span><span>New ball + Tournament prep</span></div>
+        <div class="pbar"><div class="pbar-fill" style="width:65%;background:var(--orange);"></div></div>
+        <div style="font-size:11px;color:var(--text3);margin-top:6px;">🔄 In Progress — payments still being collected as of 29 Mar 2026</div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ROUND 1 PAYMENT LIST -->
+  <div class="section">
+    <div class="section-title">👥 Round 1 — Member Payment List (01 May 2025 — ₹200 each)</div>
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>Member Name</th>
+            <th>Amount Paid</th>
+            <th>Payment Date</th>
+            <th>Total Rounds Paid</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td>1</td><td><span class="avatar" style="background:#f5a623">V</span>Vaibhav (Ghanode)</td><td><span class="amt amt-green">₹200</span></td><td>01 May 2025</td><td><span class="badge badge-amber">Round 1 + 2</span></td></tr>
+          <tr><td>2</td><td><span class="avatar" style="background:#4a90e2">A</span>Abhilash</td><td><span class="amt amt-green">₹200</span></td><td>01 May 2025</td><td><span class="badge badge-amber">Round 1 + 2</span></td></tr>
+          <tr><td>3</td><td><span class="avatar" style="background:#27c98a">S</span>Saptrishi (Saptarshi)</td><td><span class="amt amt-green">₹200</span></td><td>01 May 2025</td><td><span class="badge badge-amber">Round 1 + 2</span></td></tr>
+          <tr><td>4</td><td><span class="avatar" style="background:#9b6dff">S</span>Santosh Virkar</td><td><span class="amt amt-green">₹200</span></td><td>01 May 2025</td><td><span class="badge badge-amber">Round 1 + 2</span></td></tr>
+          <tr><td>5</td><td><span class="avatar" style="background:#e84b4b">N</span>Niharika Kummari</td><td><span class="amt amt-green">₹200</span></td><td>01 May 2025</td><td><span class="badge badge-amber">Round 1 + 2</span></td></tr>
+          <tr><td>6</td><td><span class="avatar" style="background:#e8673a">V</span>Vamshi Krishna Kotla</td><td><span class="amt amt-green">₹200</span></td><td>01 May 2025</td><td><span class="badge badge-amber">Round 1 + 2</span></td></tr>
+          <tr><td>7</td><td><span class="avatar" style="background:#fd7e14">P</span>Pranjali</td><td><span class="amt amt-green">₹200</span></td><td>01 May 2025</td><td><span class="badge badge-amber">Round 1 + 2</span></td></tr>
+          <tr><td>8</td><td><span class="avatar" style="background:#20c997">S</span>Sumit Moharkar</td><td><span class="amt amt-green">₹200</span></td><td>01 May 2025</td><td><span class="badge badge-amber">Round 1 + 2</span></td></tr>
+          <tr><td>9</td><td><span class="avatar" style="background:#f5a623">D</span>Deepti Gugale</td><td><span class="amt amt-green">₹200</span></td><td>01 May 2025</td><td><span class="badge badge-amber">Round 1 + 2</span></td></tr>
+          <tr><td>10</td><td><span class="avatar" style="background:#4a90e2">P</span>Parna / Sataparna</td><td><span class="amt amt-green">₹200</span></td><td>01 May 2025</td><td><span class="badge badge-blue">Round 1</span></td></tr>
+          <tr><td>11</td><td><span class="avatar" style="background:#27c98a">A</span>Ashwin Tadalgi</td><td><span class="amt amt-green">₹200</span></td><td>01 May 2025</td><td><span class="badge badge-blue">Round 1</span></td></tr>
+          <tr><td>12</td><td><span class="avatar" style="background:#9b6dff">S</span>Shashikant Suruse</td><td><span class="amt amt-green">₹200</span></td><td>01 May 2025</td><td><span class="badge badge-amber">Round 1 + 2</span></td></tr>
+          <tr><td>13</td><td><span class="avatar" style="background:#e84b4b">G</span>Gayatri</td><td><span class="amt amt-green">₹200</span></td><td>01 May 2025</td><td><span class="badge badge-blue">Round 1</span></td></tr>
+          <tr><td>14</td><td><span class="avatar" style="background:#e8673a">G</span>Gaurav Da</td><td><span class="amt amt-green">₹200</span></td><td>01 May 2025</td><td><span class="badge badge-amber">Round 1 + 2</span></td></tr>
+          <tr><td>15</td><td><span class="avatar" style="background:#fd7e14">N</span>Nitin</td><td><span class="amt amt-green">₹200</span></td><td>May 2025</td><td><span class="badge badge-blue">Round 1</span></td></tr>
+          <tr><td>16</td><td><span class="avatar" style="background:#20c997">A</span>Akash Sangamwar</td><td><span class="amt amt-green">₹200</span></td><td>May 2025</td><td><span class="badge badge-amber">Round 1 + 2 + 4</span></td></tr>
+          <tr><td>17</td><td><span class="avatar" style="background:#f5a623">K</span>Kumar (KandyMan)</td><td><span class="amt amt-green">₹200</span></td><td>May 2025</td><td><span class="badge badge-amber">Round 1 + 2 + 4</span></td></tr>
+          <tr><td>18</td><td><span class="avatar" style="background:#4a90e2">S</span>Shivram Kakade</td><td><span class="amt amt-green">₹200</span></td><td>May 2025</td><td><span class="badge badge-amber">Round 1 + 2 + 4</span></td></tr>
+          <tr><td>19</td><td><span class="avatar" style="background:#27c98a">A</span>Aditya Nagarnail</td><td><span class="amt amt-green">₹200</span></td><td>May 2025</td><td><span class="badge badge-amber">Round 1 + 2</span></td></tr>
+          <tr><td>20</td><td><span class="avatar" style="background:#9b6dff">N</span>Nishant</td><td><span class="amt amt-green">₹200</span></td><td>02 Jun 2025</td><td><span class="badge badge-amber">Round 1 + 2</span></td></tr>
+          <tr><td>21</td><td><span class="avatar" style="background:#e84b4b">V</span>Vishal Pawar</td><td><span class="amt amt-green">₹200</span></td><td>02 Jun 2025</td><td><span class="badge badge-amber">Round 1 + 2</span></td></tr>
+          <tr><td>22</td><td><span class="avatar" style="background:#e8673a">S</span>Shivraj Tuppe</td><td><span class="amt amt-green">₹200</span></td><td>03 Jun 2025</td><td><span class="badge badge-blue">Round 1</span></td></tr>
+          <tr><td>23</td><td><span class="avatar" style="background:#fd7e14">M</span>Mayur B</td><td><span class="amt amt-green">₹200</span></td><td>03 Jun 2025</td><td><span class="badge badge-blue">Round 1</span></td></tr>
+          <tr><td>24</td><td><span class="avatar" style="background:#20c997">H</span>Hitesh Galani</td><td><span class="amt amt-green">₹200</span></td><td>28 Jun 2025</td><td><span class="badge badge-amber">Round 1 + 2 + 4</span></td></tr>
+          <tr><td>25</td><td><span class="avatar" style="background:#f5a623">S</span>Shubham Solanki</td><td><span class="amt amt-green">₹200</span></td><td>28 Jun 2025</td><td><span class="badge badge-amber">Round 1 + 2</span></td></tr>
+          <tr><td>26</td><td><span class="avatar" style="background:#4a90e2">K</span>Komal Shirote</td><td><span class="amt amt-green">₹200</span></td><td>28 Jun 2025</td><td><span class="badge badge-amber">Round 1 + 2</span></td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- ROUND 2 PAYMENT LIST -->
+  <div class="section">
+    <div class="section-title">👥 Round 2 — Member Payment List (13–15 Jul 2025 — ₹200 each)</div>
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>Member Name</th>
+            <th>Amount Paid</th>
+            <th>Payment Date</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td>1</td><td><span class="avatar" style="background:#f5a623">A</span>Abhilash</td><td><span class="amt amt-green">₹200</span></td><td>13 Jul 2025</td></tr>
+          <tr><td>2</td><td><span class="avatar" style="background:#4a90e2">P</span>Pranjali</td><td><span class="amt amt-green">₹200</span></td><td>13 Jul 2025</td></tr>
+          <tr><td>3</td><td><span class="avatar" style="background:#27c98a">S</span>Saptrishi</td><td><span class="amt amt-green">₹200</span></td><td>13 Jul 2025</td></tr>
+          <tr><td>4</td><td><span class="avatar" style="background:#9b6dff">V</span>Vamshi Krishna Kotla</td><td><span class="amt amt-green">₹200</span></td><td>13 Jul 2025</td></tr>
+          <tr><td>5</td><td><span class="avatar" style="background:#e84b4b">A</span>Avinash Patil (Avinash Nice)</td><td><span class="amt amt-green">₹200</span></td><td>13 Jul 2025</td></tr>
+          <tr><td>6</td><td><span class="avatar" style="background:#e8673a">R</span>Rahul Maindargi</td><td><span class="amt amt-green">₹200</span></td><td>13 Jul 2025</td></tr>
+          <tr><td>7</td><td><span class="avatar" style="background:#fd7e14">A</span>Akash Sangamwar</td><td><span class="amt amt-green">₹200</span></td><td>13 Jul 2025</td></tr>
+          <tr><td>8</td><td><span class="avatar" style="background:#20c997">D</span>Deepti Gugale</td><td><span class="amt amt-green">₹200</span></td><td>13 Jul 2025</td></tr>
+          <tr><td>9</td><td><span class="avatar" style="background:#f5a623">S</span>Shubham Solanki</td><td><span class="amt amt-green">₹200</span></td><td>13 Jul 2025</td></tr>
+          <tr><td>10</td><td><span class="avatar" style="background:#4a90e2">S</span>Santosh Virkar</td><td><span class="amt amt-green">₹200</span></td><td>13 Jul 2025</td></tr>
+          <tr><td>11</td><td><span class="avatar" style="background:#27c98a">G</span>Gaurav Da</td><td><span class="amt amt-green">₹200</span></td><td>13 Jul 2025</td></tr>
+          <tr><td>12</td><td><span class="avatar" style="background:#9b6dff">A</span>Aditya Nagarnail</td><td><span class="amt amt-green">₹200</span></td><td>13 Jul 2025</td></tr>
+          <tr><td>13</td><td><span class="avatar" style="background:#e84b4b">K</span>Komal Shirote</td><td><span class="amt amt-green">₹200</span></td><td>13 Jul 2025</td></tr>
+          <tr><td>14</td><td><span class="avatar" style="background:#e8673a">P</span>Priyank Sharma</td><td><span class="amt amt-green">₹200</span></td><td>13 Jul 2025</td></tr>
+          <tr><td>15</td><td><span class="avatar" style="background:#fd7e14">K</span>Kumar (KandyMan)</td><td><span class="amt amt-green">₹200</span></td><td>13 Jul 2025</td></tr>
+          <tr><td>16</td><td><span class="avatar" style="background:#20c997">S</span>Shivram Kakade</td><td><span class="amt amt-green">₹200</span></td><td>13 Jul 2025</td></tr>
+          <tr><td>17</td><td><span class="avatar" style="background:#f5a623">N</span>Nishant</td><td><span class="amt amt-green">₹200</span></td><td>13 Jul 2025</td></tr>
+          <tr><td>18</td><td><span class="avatar" style="background:#4a90e2">H</span>Hitesh Galani</td><td><span class="amt amt-green">₹200</span></td><td>13 Jul 2025</td></tr>
+          <tr><td>19</td><td><span class="avatar" style="background:#27c98a">S</span>Sumit Moharkar</td><td><span class="amt amt-green">₹200</span></td><td>14 Jul 2025</td></tr>
+          <tr><td>20</td><td><span class="avatar" style="background:#9b6dff">R</span>Rahul Rokade (राहुल रोकडे)</td><td><span class="amt amt-green">₹200</span></td><td>14 Jul 2025</td></tr>
+          <tr><td>21</td><td><span class="avatar" style="background:#e84b4b">S</span>Shashikant Suruse</td><td><span class="amt amt-green">₹200</span></td><td>14 Jul 2025</td></tr>
+          <tr><td>22</td><td><span class="avatar" style="background:#e8673a">V</span>Vaibhav Ghanode</td><td><span class="amt amt-green">₹200</span></td><td>14 Jul 2025</td></tr>
+          <tr><td>23</td><td><span class="avatar" style="background:#fd7e14">V</span>Vinayak Deshmukh</td><td><span class="amt amt-green">₹200</span></td><td>14 Jul 2025</td></tr>
+          <tr><td>24</td><td><span class="avatar" style="background:#20c997">D</span>Dr. Sachin Bhagwat</td><td><span class="amt amt-green">₹200</span></td><td>14 Jul 2025</td></tr>
+          <tr><td>25</td><td><span class="avatar" style="background:#f5a623">A</span>Avinash Kharjul</td><td><span class="amt amt-green">₹200</span></td><td>14 Jul 2025</td></tr>
+          <tr><td>26</td><td><span class="avatar" style="background:#4a90e2">P</span>Pankaj Arvikar</td><td><span class="amt amt-green">₹200</span></td><td>14 Jul 2025</td></tr>
+          <tr><td>27</td><td><span class="avatar" style="background:#27c98a">S</span>Sunil Tighile</td><td><span class="amt amt-green">₹200</span></td><td>14 Jul 2025</td></tr>
+          <tr><td>28</td><td><span class="avatar" style="background:#9b6dff">V</span>Vishal Pawar</td><td><span class="amt amt-green">₹200</span></td><td>15 Jul 2025</td></tr>
+          <tr style="background:rgba(39,201,138,0.06)">
+            <td colspan="2" style="text-align:right;font-weight:700;color:var(--text2);padding-right:16px;">Round 2 Total</td>
+            <td><span class="amt amt-green" style="font-size:18px;">₹5,600</span></td>
+            <td style="color:var(--text3);font-size:12px;">+ ₹200 more confirmed (Sachin Chaudhary ₹400 Sep)</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- ROUND 4 PAYMENT LIST -->
+  <div class="section">
+    <div class="section-title">👥 Round 4 — Member Payment List (28–29 Mar 2026 — ₹200 each, Ongoing)</div>
+    <div class="note"><strong>Note:</strong> Members confirmed "Done" after Abhilash's announcement on 28 Mar 2026. Starting balance was ₹2,680. Collection still in progress as of 29 Mar 2026.</div>
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>Member Name</th>
+            <th>Amount</th>
+            <th>Date Confirmed</th>
+            <th>Status</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td>1</td><td><span class="avatar" style="background:#f5a623">A</span>Aditya Nagarnail</td><td><span class="amt amt-green">₹200</span></td><td>28 Mar 2026</td><td><span class="badge badge-green">✅ Done</span></td></tr>
+          <tr><td>2</td><td><span class="avatar" style="background:#4a90e2">K</span>KandyMan (Kumar)</td><td><span class="amt amt-green">₹200</span></td><td>28 Mar 2026</td><td><span class="badge badge-green">✅ Done</span></td></tr>
+          <tr><td>3</td><td><span class="avatar" style="background:#27c98a">S</span>Shubham Gore</td><td><span class="amt amt-green">₹200</span></td><td>28 Mar 2026</td><td><span class="badge badge-green">✅ Done</span></td></tr>
+          <tr><td>4</td><td><span class="avatar" style="background:#9b6dff">S</span>Shivram Kakade</td><td><span class="amt amt-green">₹200</span></td><td>28 Mar 2026</td><td><span class="badge badge-green">✅ Done</span></td></tr>
+          <tr><td>5</td><td><span class="avatar" style="background:#e84b4b">D</span>Deepti Gugale</td><td><span class="amt amt-green">₹200</span></td><td>28 Mar 2026</td><td><span class="badge badge-green">✅ Done</span></td></tr>
+          <tr><td>6</td><td><span class="avatar" style="background:#e8673a">P</span>Priyank Sharma</td><td><span class="amt amt-green">₹200</span></td><td>28 Mar 2026</td><td><span class="badge badge-green">✅ Done</span></td></tr>
+          <tr><td>7</td><td><span class="avatar" style="background:#fd7e14">S</span>Sachin Chaudhary</td><td><span class="amt amt-green">₹200</span></td><td>28 Mar 2026</td><td><span class="badge badge-green">✅ Done</span></td></tr>
+          <tr><td>8</td><td><span class="avatar" style="background:#20c997">R</span>Rahul Rokade D1303</td><td><span class="amt amt-green">₹200</span></td><td>28 Mar 2026</td><td><span class="badge badge-green">✅ Done</span></td></tr>
+          <tr><td>9</td><td><span class="avatar" style="background:#f5a623">H</span>Hitesh Galani</td><td><span class="amt amt-green">₹200</span></td><td>28 Mar 2026</td><td><span class="badge badge-green">✅ Done</span></td></tr>
+          <tr><td>10</td><td><span class="avatar" style="background:#4a90e2">S</span>Shashikant + Tanmay (Suruse)</td><td><span class="amt amt-green">₹400 (2×200)</span></td><td>29 Mar 2026</td><td><span class="badge badge-green">✅ Done</span></td></tr>
+          <tr><td>11</td><td><span class="avatar" style="background:#27c98a">P</span>Pradeep</td><td><span class="amt amt-green">₹200</span></td><td>29 Mar 2026</td><td><span class="badge badge-green">✅ Done</span></td></tr>
+          <tr><td>12</td><td><span class="avatar" style="background:#9b6dff">P</span>Pandurang Durande</td><td><span class="amt amt-green">₹200</span></td><td>29 Mar 2026</td><td><span class="badge badge-green">✅ Done</span></td></tr>
+          <tr><td>13</td><td><span class="avatar" style="background:#e84b4b">R</span>Rahul Maindargi</td><td><span class="amt amt-green">₹200</span></td><td>29 Mar 2026</td><td><span class="badge badge-green">✅ Done</span></td></tr>
+          <tr><td>14</td><td><span class="avatar" style="background:#e8673a">S</span>Sumit Moharkar</td><td><span class="amt amt-green">₹200</span></td><td>29 Mar 2026</td><td><span class="badge badge-green">✅ Done</span></td></tr>
+          <tr><td>15</td><td><span class="avatar" style="background:#fd7e14">S</span>Sumeet</td><td><span class="amt amt-green">₹200</span></td><td>29 Mar 2026</td><td><span class="badge badge-green">✅ Done</span></td></tr>
+          <tr><td>16</td><td><span class="avatar" style="background:#20c997">A</span>Avinash Nice</td><td><span class="amt amt-green">₹200</span></td><td>29 Mar 2026</td><td><span class="badge badge-green">✅ Done</span></td></tr>
+          <tr><td>17</td><td><span class="avatar" style="background:#f5a623">S</span>Saurabh D</td><td><span class="amt amt-green">₹200</span></td><td>29 Mar 2026</td><td><span class="badge badge-green">✅ Done</span></td></tr>
+          <tr><td>18</td><td><span class="avatar" style="background:#4a90e2">D</span>Dr. Sachin Bhagwat</td><td><span class="amt amt-green">₹200</span></td><td>29 Mar 2026</td><td><span class="badge badge-green">✅ Done</span></td></tr>
+          <tr><td>19</td><td><span class="avatar" style="background:#27c98a">S</span>Sunil Tighile</td><td><span class="amt amt-green">₹200</span></td><td>29 Mar 2026</td><td><span class="badge badge-green">✅ Done</span></td></tr>
+          <tr><td>20</td><td><span class="avatar" style="background:#9b6dff">A</span>Avinash Kharjul</td><td><span class="amt amt-green">₹200</span></td><td>29 Mar 2026</td><td><span class="badge badge-green">✅ Done</span></td></tr>
+          <tr><td>21</td><td><span class="avatar" style="background:#e84b4b">A</span>Akash Sangamwar</td><td><span class="amt amt-green">₹200</span></td><td>29 Mar 2026</td><td><span class="badge badge-green">✅ Done</span></td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- PAYMENT FREQUENCY TABLE -->
+  <div class="section">
+    <div class="section-title">🏆 Member Payment Frequency (How many rounds each person paid)</div>
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>Member Name</th>
+            <th>Round 1 (May'25)</th>
+            <th>Round 2 (Jul'25)</th>
+            <th>Round 3 (Sep'25)</th>
+            <th>Round 4 (Mar'26)</th>
+            <th>Times Paid</th>
+            <th>Total Amount</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>Abhilash</strong></td>
+            <td><span class="badge badge-green">✅</span></td>
+            <td><span class="badge badge-green">✅</span></td>
+            <td><span class="badge badge-gray">—</span></td>
+            <td><span class="badge badge-gray">—</span></td>
+            <td><span class="amt amt-amber">2</span></td>
+            <td><span class="amt amt-green">₹400+</span></td>
+          </tr>
+          <tr>
+            <td><strong>Shivram Kakade</strong></td>
+            <td><span class="badge badge-green">✅</span></td>
+            <td><span class="badge badge-green">✅</span></td>
+            <td><span class="badge badge-gray">—</span></td>
+            <td><span class="badge badge-green">✅</span></td>
+            <td><span class="amt amt-amber">3</span></td>
+            <td><span class="amt amt-green">₹600</span></td>
+          </tr>
+          <tr>
+            <td><strong>Akash Sangamwar</strong></td>
+            <td><span class="badge badge-green">✅</span></td>
+            <td><span class="badge badge-green">✅</span></td>
+            <td><span class="badge badge-gray">—</span></td>
+            <td><span class="badge badge-green">✅</span></td>
+            <td><span class="amt amt-amber">3</span></td>
+            <td><span class="amt amt-green">₹600</span></td>
+          </tr>
+          <tr>
+            <td><strong>Hitesh Galani</strong></td>
+            <td><span class="badge badge-green">✅</span></td>
+            <td><span class="badge badge-green">✅</span></td>
+            <td><span class="badge badge-gray">—</span></td>
+            <td><span class="badge badge-green">✅</span></td>
+            <td><span class="amt amt-amber">3</span></td>
+            <td><span class="amt amt-green">₹600</span></td>
+          </tr>
+          <tr>
+            <td><strong>Kumar (KandyMan)</strong></td>
+            <td><span class="badge badge-green">✅</span></td>
+            <td><span class="badge badge-green">✅</span></td>
+            <td><span class="badge badge-gray">—</span></td>
+            <td><span class="badge badge-green">✅</span></td>
+            <td><span class="amt amt-amber">3</span></td>
+            <td><span class="amt amt-green">₹600</span></td>
+          </tr>
+          <tr>
+            <td><strong>Saptrishi F501</strong></td>
+            <td><span class="badge badge-green">✅</span></td>
+            <td><span class="badge badge-green">✅</span></td>
+            <td><span class="badge badge-gray">—</span></td>
+            <td><span class="badge badge-gray">—</span></td>
+            <td><span class="amt amt-blue">2</span></td>
+            <td><span class="amt amt-green">₹400</span></td>
+          </tr>
+          <tr>
+            <td><strong>Vamshi Krishna Kotla</strong></td>
+            <td><span class="badge badge-green">✅</span></td>
+            <td><span class="badge badge-green">✅</span></td>
+            <td><span class="badge badge-gray">—</span></td>
+            <td><span class="badge badge-gray">—</span></td>
+            <td><span class="amt amt-blue">2</span></td>
+            <td><span class="amt amt-green">₹400</span></td>
+          </tr>
+          <tr>
+            <td><strong>Deepti Gugale</strong></td>
+            <td><span class="badge badge-green">✅</span></td>
+            <td><span class="badge badge-green">✅</span></td>
+            <td><span class="badge badge-gray">—</span></td>
+            <td><span class="badge badge-green">✅</span></td>
+            <td><span class="amt amt-amber">3</span></td>
+            <td><span class="amt amt-green">₹600</span></td>
+          </tr>
+          <tr>
+            <td><strong>Sumit Moharkar</strong></td>
+            <td><span class="badge badge-green">✅</span></td>
+            <td><span class="badge badge-green">✅</span></td>
+            <td><span class="badge badge-gray">—</span></td>
+            <td><span class="badge badge-green">✅</span></td>
+            <td><span class="amt amt-amber">3</span></td>
+            <td><span class="amt amt-green">₹600</span></td>
+          </tr>
+          <tr>
+            <td><strong>Gaurav Da</strong></td>
+            <td><span class="badge badge-green">✅</span></td>
+            <td><span class="badge badge-green">✅</span></td>
+            <td><span class="badge badge-gray">—</span></td>
+            <td><span class="badge badge-gray">—</span></td>
+            <td><span class="amt amt-blue">2</span></td>
+            <td><span class="amt amt-green">₹400</span></td>
+          </tr>
+          <tr>
+            <td><strong>Aditya Nagarnail</strong></td>
+            <td><span class="badge badge-green">✅</span></td>
+            <td><span class="badge badge-green">✅</span></td>
+            <td><span class="badge badge-gray">—</span></td>
+            <td><span class="badge badge-green">✅</span></td>
+            <td><span class="amt amt-amber">3</span></td>
+            <td><span class="amt amt-green">₹600</span></td>
+          </tr>
+          <tr>
+            <td><strong>Nishant</strong></td>
+            <td><span class="badge badge-green">✅</span></td>
+            <td><span class="badge badge-green">✅</span></td>
+            <td><span class="badge badge-gray">—</span></td>
+            <td><span class="badge badge-gray">—</span></td>
+            <td><span class="amt amt-blue">2</span></td>
+            <td><span class="amt amt-green">₹400</span></td>
+          </tr>
+          <tr>
+            <td><strong>Vishal Pawar</strong></td>
+            <td><span class="badge badge-green">✅</span></td>
+            <td><span class="badge badge-green">✅</span></td>
+            <td><span class="badge badge-gray">—</span></td>
+            <td><span class="badge badge-gray">—</span></td>
+            <td><span class="amt amt-blue">2</span></td>
+            <td><span class="amt amt-green">₹400</span></td>
+          </tr>
+          <tr>
+            <td><strong>Shashikant Suruse</strong></td>
+            <td><span class="badge badge-green">✅</span></td>
+            <td><span class="badge badge-green">✅</span></td>
+            <td><span class="badge badge-gray">—</span></td>
+            <td><span class="badge badge-green">✅ (×2 incl. Tanmay)</span></td>
+            <td><span class="amt amt-amber" style="font-size:18px;">3+</span></td>
+            <td><span class="amt amt-green">₹800 (incl. son)</span></td>
+          </tr>
+          <tr>
+            <td><strong>Santosh Virkar</strong></td>
+            <td><span class="badge badge-green">✅</span></td>
+            <td><span class="badge badge-green">✅</span></td>
+            <td><span class="badge badge-gray">—</span></td>
+            <td><span class="badge badge-gray">—</span></td>
+            <td><span class="amt amt-blue">2</span></td>
+            <td><span class="amt amt-green">₹400</span></td>
+          </tr>
+          <tr>
+            <td><strong>Komal Shirote</strong></td>
+            <td><span class="badge badge-green">✅</span></td>
+            <td><span class="badge badge-green">✅</span></td>
+            <td><span class="badge badge-gray">—</span></td>
+            <td><span class="badge badge-gray">—</span></td>
+            <td><span class="amt amt-blue">2</span></td>
+            <td><span class="amt amt-green">₹400</span></td>
+          </tr>
+          <tr>
+            <td><strong>Shubham Solanki</strong></td>
+            <td><span class="badge badge-green">✅</span></td>
+            <td><span class="badge badge-green">✅</span></td>
+            <td><span class="badge badge-gray">—</span></td>
+            <td><span class="badge badge-gray">—</span></td>
+            <td><span class="amt amt-blue">2</span></td>
+            <td><span class="amt amt-green">₹400</span></td>
+          </tr>
+          <tr>
+            <td><strong>Rahul Rokade</strong></td>
+            <td><span class="badge badge-gray">—</span></td>
+            <td><span class="badge badge-green">✅</span></td>
+            <td><span class="badge badge-gray">—</span></td>
+            <td><span class="badge badge-green">✅</span></td>
+            <td><span class="amt amt-blue">2</span></td>
+            <td><span class="amt amt-green">₹400</span></td>
+          </tr>
+          <tr>
+            <td><strong>Vaibhav Ghanode</strong></td>
+            <td><span class="badge badge-green">✅</span></td>
+            <td><span class="badge badge-green">✅</span></td>
+            <td><span class="badge badge-gray">—</span></td>
+            <td><span class="badge badge-gray">—</span></td>
+            <td><span class="amt amt-blue">2</span></td>
+            <td><span class="amt amt-green">₹400</span></td>
+          </tr>
+          <tr>
+            <td><strong>Sachin Chaudhary</strong></td>
+            <td><span class="badge badge-gray">—</span></td>
+            <td><span class="badge badge-gray">—</span></td>
+            <td><span class="badge badge-green">✅ ₹400</span></td>
+            <td><span class="badge badge-green">✅</span></td>
+            <td><span class="amt amt-blue">2</span></td>
+            <td><span class="amt amt-green">₹600</span></td>
+          </tr>
+          <tr>
+            <td><strong>Prathamesh Jathar</strong></td>
+            <td><span class="badge badge-gray">—</span></td>
+            <td><span class="badge badge-gray">—</span></td>
+            <td><span class="badge badge-green">✅ ₹400</span></td>
+            <td><span class="badge badge-gray">—</span></td>
+            <td><span class="amt amt-blue">1</span></td>
+            <td><span class="amt amt-green">₹400</span></td>
+          </tr>
+          <tr>
+            <td><strong>Dr. Sachin Bhagwat</strong></td>
+            <td><span class="badge badge-gray">—</span></td>
+            <td><span class="badge badge-green">✅</span></td>
+            <td><span class="badge badge-gray">—</span></td>
+            <td><span class="badge badge-green">✅</span></td>
+            <td><span class="amt amt-blue">2</span></td>
+            <td><span class="amt amt-green">₹400</span></td>
+          </tr>
+          <tr>
+            <td><strong>Avinash Kharjul</strong></td>
+            <td><span class="badge badge-gray">—</span></td>
+            <td><span class="badge badge-green">✅</span></td>
+            <td><span class="badge badge-gray">—</span></td>
+            <td><span class="badge badge-green">✅</span></td>
+            <td><span class="amt amt-blue">2</span></td>
+            <td><span class="amt amt-green">₹400</span></td>
+          </tr>
+          <tr>
+            <td><strong>Priyank Sharma</strong></td>
+            <td><span class="badge badge-gray">—</span></td>
+            <td><span class="badge badge-green">✅</span></td>
+            <td><span class="badge badge-gray">—</span></td>
+            <td><span class="badge badge-green">✅</span></td>
+            <td><span class="amt amt-blue">2</span></td>
+            <td><span class="amt amt-green">₹400</span></td>
+          </tr>
+          <tr>
+            <td><strong>Pankaj Arvikar</strong></td>
+            <td><span class="badge badge-gray">—</span></td>
+            <td><span class="badge badge-green">✅</span></td>
+            <td><span class="badge badge-gray">—</span></td>
+            <td><span class="badge badge-gray">—</span></td>
+            <td><span class="amt amt-blue">1</span></td>
+            <td><span class="amt amt-green">₹200</span></td>
+          </tr>
+          <tr>
+            <td><strong>Sunil Tighile</strong></td>
+            <td><span class="badge badge-gray">—</span></td>
+            <td><span class="badge badge-green">✅</span></td>
+            <td><span class="badge badge-gray">—</span></td>
+            <td><span class="badge badge-green">✅</span></td>
+            <td><span class="amt amt-blue">2</span></td>
+            <td><span class="amt amt-green">₹400</span></td>
+          </tr>
+          <tr>
+            <td><strong>Vinayak Deshmukh</strong></td>
+            <td><span class="badge badge-gray">—</span></td>
+            <td><span class="badge badge-green">✅</span></td>
+            <td><span class="badge badge-gray">—</span></td>
+            <td><span class="badge badge-gray">—</span></td>
+            <td><span class="amt amt-blue">1</span></td>
+            <td><span class="amt amt-green">₹200</span></td>
+          </tr>
+          <tr>
+            <td><strong>Rahul Maindargi</strong></td>
+            <td><span class="badge badge-gray">—</span></td>
+            <td><span class="badge badge-green">✅</span></td>
+            <td><span class="badge badge-gray">—</span></td>
+            <td><span class="badge badge-green">✅</span></td>
+            <td><span class="amt amt-blue">2</span></td>
+            <td><span class="amt amt-green">₹400</span></td>
+          </tr>
+          <tr>
+            <td><strong>Avinash Patil (Nice)</strong></td>
+            <td><span class="badge badge-gray">—</span></td>
+            <td><span class="badge badge-green">✅</span></td>
+            <td><span class="badge badge-gray">—</span></td>
+            <td><span class="badge badge-green">✅</span></td>
+            <td><span class="amt amt-blue">2</span></td>
+            <td><span class="amt amt-green">₹400</span></td>
+          </tr>
+          <tr>
+            <td><strong>Pradeep</strong></td>
+            <td><span class="badge badge-gray">—</span></td>
+            <td><span class="badge badge-gray">—</span></td>
+            <td><span class="badge badge-gray">—</span></td>
+            <td><span class="badge badge-green">✅</span></td>
+            <td><span class="amt amt-blue">1</span></td>
+            <td><span class="amt amt-green">₹200</span></td>
+          </tr>
+          <tr>
+            <td><strong>Pandurang Durande</strong></td>
+            <td><span class="badge badge-gray">—</span></td>
+            <td><span class="badge badge-gray">—</span></td>
+            <td><span class="badge badge-gray">—</span></td>
+            <td><span class="badge badge-green">✅</span></td>
+            <td><span class="amt amt-blue">1</span></td>
+            <td><span class="amt amt-green">₹200</span></td>
+          </tr>
+          <tr>
+            <td><strong>Saurabh D</strong></td>
+            <td><span class="badge badge-gray">—</span></td>
+            <td><span class="badge badge-gray">—</span></td>
+            <td><span class="badge badge-gray">—</span></td>
+            <td><span class="badge badge-green">✅</span></td>
+            <td><span class="amt amt-blue">1</span></td>
+            <td><span class="amt amt-green">₹200</span></td>
+          </tr>
+          <tr>
+            <td><strong>Sumeet</strong></td>
+            <td><span class="badge badge-gray">—</span></td>
+            <td><span class="badge badge-gray">—</span></td>
+            <td><span class="badge badge-gray">—</span></td>
+            <td><span class="badge badge-green">✅</span></td>
+            <td><span class="amt amt-blue">1</span></td>
+            <td><span class="amt amt-green">₹200</span></td>
+          </tr>
+          <tr>
+            <td><strong>Shubham Gore</strong></td>
+            <td><span class="badge badge-gray">—</span></td>
+            <td><span class="badge badge-gray">—</span></td>
+            <td><span class="badge badge-gray">—</span></td>
+            <td><span class="badge badge-green">✅</span></td>
+            <td><span class="amt amt-blue">1</span></td>
+            <td><span class="amt amt-green">₹200</span></td>
+          </tr>
+          <tr>
+            <td><strong>Niharika Kummari</strong></td>
+            <td><span class="badge badge-green">✅</span></td>
+            <td><span class="badge badge-gray">—</span></td>
+            <td><span class="badge badge-gray">—</span></td>
+            <td><span class="badge badge-gray">—</span></td>
+            <td><span class="amt amt-blue">1</span></td>
+            <td><span class="amt amt-green">₹200</span></td>
+          </tr>
+          <tr>
+            <td><strong>Pranjali</strong></td>
+            <td><span class="badge badge-green">✅</span></td>
+            <td><span class="badge badge-green">✅</span></td>
+            <td><span class="badge badge-gray">—</span></td>
+            <td><span class="badge badge-gray">—</span></td>
+            <td><span class="amt amt-blue">2</span></td>
+            <td><span class="amt amt-green">₹400</span></td>
+          </tr>
+          <tr>
+            <td><strong>Parna / Sataparna</strong></td>
+            <td><span class="badge badge-green">✅</span></td>
+            <td><span class="badge badge-gray">—</span></td>
+            <td><span class="badge badge-gray">—</span></td>
+            <td><span class="badge badge-gray">—</span></td>
+            <td><span class="amt amt-blue">1</span></td>
+            <td><span class="amt amt-green">₹200</span></td>
+          </tr>
+          <tr>
+            <td><strong>Ashwin Tadalgi</strong></td>
+            <td><span class="badge badge-green">✅</span></td>
+            <td><span class="badge badge-gray">—</span></td>
+            <td><span class="badge badge-gray">—</span></td>
+            <td><span class="badge badge-gray">—</span></td>
+            <td><span class="amt amt-blue">1</span></td>
+            <td><span class="amt amt-green">₹200</span></td>
+          </tr>
+          <tr>
+            <td><strong>Gayatri</strong></td>
+            <td><span class="badge badge-green">✅</span></td>
+            <td><span class="badge badge-gray">—</span></td>
+            <td><span class="badge badge-gray">—</span></td>
+            <td><span class="badge badge-gray">—</span></td>
+            <td><span class="amt amt-blue">1</span></td>
+            <td><span class="amt amt-green">₹200</span></td>
+          </tr>
+          <tr>
+            <td><strong>Nitin</strong></td>
+            <td><span class="badge badge-green">✅</span></td>
+            <td><span class="badge badge-gray">—</span></td>
+            <td><span class="badge badge-gray">—</span></td>
+            <td><span class="badge badge-gray">—</span></td>
+            <td><span class="amt amt-blue">1</span></td>
+            <td><span class="amt amt-green">₹200</span></td>
+          </tr>
+          <tr>
+            <td><strong>Shivraj Tuppe</strong></td>
+            <td><span class="badge badge-green">✅</span></td>
+            <td><span class="badge badge-gray">—</span></td>
+            <td><span class="badge badge-gray">—</span></td>
+            <td><span class="badge badge-gray">—</span></td>
+            <td><span class="amt amt-blue">1</span></td>
+            <td><span class="amt amt-green">₹200</span></td>
+          </tr>
+          <tr>
+            <td><strong>Mayur B</strong></td>
+            <td><span class="badge badge-green">✅</span></td>
+            <td><span class="badge badge-gray">—</span></td>
+            <td><span class="badge badge-gray">—</span></td>
+            <td><span class="badge badge-gray">—</span></td>
+            <td><span class="amt amt-blue">1</span></td>
+            <td><span class="amt amt-green">₹200</span></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- BALANCE TIMELINE -->
+  <div class="section">
+    <div class="section-title">📅 Balance Timeline</div>
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>Date</th>
+            <th>Event</th>
+            <th>Fund Raised</th>
+            <th>Expenses</th>
+            <th>Balance</th>
+            <th>Reported By</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>01 May 2025</td>
+            <td>Round 1 Fund Drive starts</td>
+            <td><span class="amt amt-green">₹2,800+</span></td>
+            <td>—</td>
+            <td>—</td>
+            <td style="color:var(--text2)">Saptrishi / Abhilash</td>
+          </tr>
+          <tr>
+            <td>02 Jun 2025</td>
+            <td>21 contributors; expenses logged</td>
+            <td><span class="amt amt-green">₹4,200</span></td>
+            <td><span class="amt amt-red">₹4,078</span></td>
+            <td><span class="amt amt-amber">₹122</span></td>
+            <td style="color:var(--text2)">Saptrishi F501</td>
+          </tr>
+          <tr>
+            <td>03 Jun 2025</td>
+            <td>Shivraj pays → 22 contributors</td>
+            <td><span class="amt amt-green">₹4,400</span></td>
+            <td><span class="amt amt-red">₹4,078</span></td>
+            <td><span class="amt amt-amber">₹322</span></td>
+            <td style="color:var(--text2)">Saptrishi F501</td>
+          </tr>
+          <tr>
+            <td>03 Jun 2025</td>
+            <td>Mayur B pays → 23 contributors</td>
+            <td><span class="amt amt-green">₹4,600</span></td>
+            <td><span class="amt amt-red">₹4,078</span></td>
+            <td><span class="amt amt-amber">₹522</span></td>
+            <td style="color:var(--text2)">Saptrishi F501</td>
+          </tr>
+          <tr>
+            <td>28 Jun 2025</td>
+            <td>Hitesh, Shubham, Komal join → 26 contributors</td>
+            <td><span class="amt amt-green">₹5,200</span></td>
+            <td><span class="amt amt-red">₹4,078</span></td>
+            <td><span class="amt amt-amber">₹1,122</span></td>
+            <td style="color:var(--text2)">Saptrishi F501</td>
+          </tr>
+          <tr>
+            <td>14 Jul 2025</td>
+            <td>Round 2 completes + new expenses (Ball, Net, Pulley)</td>
+            <td><span class="amt amt-green">₹5,000 new + ₹632 bal</span></td>
+            <td><span class="amt amt-red">₹1,750</span></td>
+            <td><span class="amt amt-amber">₹3,882</span></td>
+            <td style="color:var(--text2)">Abhilash</td>
+          </tr>
+          <tr>
+            <td>14 Jul 2025</td>
+            <td>More contributors (27–28), wiper added</td>
+            <td><span class="amt amt-green">₹5,400 new + ₹632 bal</span></td>
+            <td><span class="amt amt-red">₹1,969</span></td>
+            <td><span class="amt amt-amber">₹4,055</span></td>
+            <td style="color:var(--text2)">Abhilash</td>
+          </tr>
+          <tr>
+            <td>09 Sep 2025</td>
+            <td>Ground lights added to expenses</td>
+            <td><span class="amt amt-green">₹5,800 new + ₹632 bal</span></td>
+            <td><span class="amt amt-red">₹1,969 + ₹2,700</span></td>
+            <td><span class="amt amt-amber">₹1,355</span></td>
+            <td style="color:var(--text2)">Abhilash</td>
+          </tr>
+          <tr>
+            <td>10 Sep 2025</td>
+            <td>Sachin Chaudhary pays ₹400</td>
+            <td><span class="amt amt-green">₹+400</span></td>
+            <td>—</td>
+            <td><span class="amt amt-amber">₹1,755</span></td>
+            <td style="color:var(--text2)">Abhilash</td>
+          </tr>
+          <tr>
+            <td>15 Sep 2025</td>
+            <td>Prathamesh pays ₹400</td>
+            <td><span class="amt amt-green">₹+400</span></td>
+            <td>—</td>
+            <td><span class="amt amt-amber">₹2,155</span></td>
+            <td style="color:var(--text2)">Abhilash</td>
+          </tr>
+          <tr>
+            <td>21 Mar 2026</td>
+            <td>Balance confirmed before Round 4</td>
+            <td>—</td>
+            <td>—</td>
+            <td><span class="amt amt-green">₹2,680</span></td>
+            <td style="color:var(--text2)">Abhilash</td>
+          </tr>
+          <tr>
+            <td>28–29 Mar 2026</td>
+            <td>Round 4 ongoing (20+ members)</td>
+            <td><span class="amt amt-green">₹4,000+ collecting</span></td>
+            <td>Ball, Tournament prep (TBD)</td>
+            <td><span class="amt amt-amber">₹2,680 + new</span></td>
+            <td style="color:var(--text2)">Abhilash</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- KEY NOTES -->
+  <div class="section">
+    <div class="section-title">📌 Key Notes & Observations</div>
+    <div class="note">
+      <strong>📌 Balls:</strong> Total 4 balls purchased — Ball 1 (Cosco Aspire ₹800, lost), Ball 2 (Cosco Super Volley ₹1,078, lost), Ball 3 (Cosco Super Volley via Aditya ₹1,000, active), Ball 4 (Nivia G2020 via Kumar ₹890, set aside/not in use as of Sep 2025).
+    </div>
+    <div class="note">
+      <strong>📌 Responsible Collectors:</strong> Saptrishi F501 managed Round 1 transparency. Abhilash took over from Round 2 and has been maintaining all ledgers. Vaibhav Ghanode posted the Round 2 final list.
+    </div>
+    <div class="note">
+      <strong>📌 Most Active Contributors:</strong> Shivram Kakade, Akash Sangamwar, Hitesh Galani, Deepti Gugale, Aditya Nagarnail, Sumit Moharkar, and Kumar (KandyMan) paid in 3 rounds. Shashikant Suruse paid in 3 rounds + extra for his son Tanmay.
+    </div>
+    <div class="note">
+      <strong>📌 Round 3 Note:</strong> No formal list was published for Round 3. Only Prathamesh Jathar (₹400) and Sachin Chaudhary (₹400) are explicitly confirmed from chat messages. Balance grew from ₹1,355 → ₹2,155 → ₹2,680 over Sep 2025–Mar 2026.
+    </div>
+    <div class="note">
+      <strong>📌 Current Status (29 Mar 2026):</strong> Round 4 ongoing. Pre-round balance ₹2,680. Minimum 21 "Done" payments confirmed = ~₹4,200+ additional. New funds being used for tournament ball and net purchases.
+    </div>
+  </div>
+
+  <div class="footer">
+    🏐 Volleyball Sai Vista — Auto-generated from WhatsApp Chat Analysis &nbsp;|&nbsp; Data Period: 27 Apr 2025 – 29 Mar 2026<br>
+    All figures sourced from pinned messages and payment lists shared in the group chat.
+  </div>
+
+</div>
+</body>
+</html>
